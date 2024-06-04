@@ -1,18 +1,36 @@
 import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { AntDesign } from '@expo/vector-icons';
 import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
+import { Pressable, View, TextInput, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
-import Colors from '../../constants/Colors';
-import { useColorScheme } from '../../components/useColorScheme';
-import { useClientOnlyValue } from '../../components/useClientOnlyValue';
+import Colors from '@constants/Colors';
+import { useColorScheme } from '@components/useColorScheme';
+import { useClientOnlyValue } from '@components/useClientOnlyValue';
 
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
+  name: React.ComponentProps<typeof AntDesign>['name'];
   color: string;
 }) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
+  return <AntDesign size={28} style={{ marginBottom: -3 }} {...props} />;
+}
+
+function CustomHeader() {
+  return (
+    <View style={styles.searchContainer}>
+      <View style={styles.searchItem}>
+        <TouchableOpacity style={styles.cartIcon}>
+          <AntDesign name="search1" size={25} style={styles.icon} />
+        </TouchableOpacity>
+        <TextInput style={styles.searchInput} placeholder="Search" />
+        <TouchableOpacity style={styles.cartIcon}>
+          <AntDesign name="camerao" size={25} style={styles.icon} />
+        </TouchableOpacity>
+      </View>
+      <TouchableOpacity style={styles.cartIcon}>
+        <AntDesign name="shoppingcart" size={25} style={styles.icon} />
+      </TouchableOpacity>
+    </View>
+  );
 }
 
 export default function TabLayout() {
@@ -22,38 +40,151 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
+        header: CustomHeader,
       }}>
+      <Tabs.Screen name='index' options={{ href: null }} />
       <Tabs.Screen
-        name="index"
+        name="Home"
         options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
+          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
         }}
       />
       <Tabs.Screen
         name="two"
         options={{
           title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
         }}
       />
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    padding: 20,
+    alignItems: 'center',
+  },
+  searchItem: {
+    flex: 1,
+    flexDirection: 'row',
+    borderColor: '#fff',
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderRadius: 20,
+    alignItems: 'center',
+    paddingHorizontal: 10,
+  },
+  searchInput: {
+    flex: 1,
+    height: 50,
+    paddingHorizontal: 10,
+  },
+  searchIcon: {
+    marginLeft: 10,
+  },
+  cartIcon: {
+    marginLeft: 10,
+  },
+  icon: {
+    width: 24,
+    height: 24,
+  },
+  banner: {
+    backgroundColor: '#e7c5ff',
+    padding: 20,
+    borderRadius: 10,
+    margin: 10,
+    alignItems: 'center',
+  },
+  bannerText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  shopNowButton: {
+    marginTop: 10,
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 20,
+  },
+  shopNowText: {
+    color: '#e7c5ff',
+    fontWeight: 'bold',
+  },
+  bannerImage: {
+    width: 100,
+    height: 100,
+    marginTop: 10,
+  },
+  categories: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginVertical: 20,
+  },
+  category: {
+    alignItems: 'center',
+  },
+  categoryIcon: {
+    width: 50,
+    height: 50,
+  },
+  categoryText: {
+    marginTop: 5,
+    fontSize: 12,
+  },
+  flashSales: {
+    backgroundColor: '#ff69b4',
+    padding: 10,
+    borderRadius: 10,
+    marginHorizontal: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  flashSalesText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  flashSalesTimer: {
+    color: '#fff',
+  },
+  seeAllButton: {
+    padding: 5,
+  },
+  seeAllText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  latestProducts: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    margin: 10,
+  },
+  latestProductsText: {
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  products: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    margin: 10,
+  },
+  product: {
+    alignItems: 'center',
+  },
+  productImage: {
+    width: 100,
+    height: 100,
+  },
+  productText: {
+    marginTop: 5,
+    textAlign: 'center',
+    fontSize: 12,
+  },
+});
