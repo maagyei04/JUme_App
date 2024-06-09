@@ -24,25 +24,25 @@ const products = [
   {
     id: 1,
     name: 'sample',
-    price: 'GHS 139.00',
+    price: 139,
     image: require('@assets/images/watch.png')
   },
   {
     id: 2,
     name: 'sample',
-    price: 'GHS 139.00',
+    price: 139,
     image: require('@assets/images/watch.png')
   },
   {
     id: 3,
     name: 'sample',
-    price: 'GHS 139.00',
+    price: 139,
     image: require('@assets/images/watch.png')
   },
   {
     id: 4,
     name: 'sample',
-    price: 'GHS 139.00',
+    price: 139,
     image: require('@assets/images/watch.png')
   },
 ]
@@ -103,7 +103,7 @@ const ProductListItem = ({ product, onAddToCart }: ProductListItemProps) => {
           </Pressable>
         </View>
         <Text style={styles.productText}>{product.name}</Text>
-        <Text style={styles.productPrice}>{product.price}</Text>
+        <Text style={styles.productPrice}>GHS {product.price}.00</Text>
         <Pressable style={styles.liveChatButton} onPress={() => onAddToCart(product)}>
           <Text style={styles.flashSalesText}>Add To Cart</Text>
         </Pressable>

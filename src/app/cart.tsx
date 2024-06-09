@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Platform, StyleSheet, Button, FlatList } from 'react-native';
+import { View, Text, Platform, StyleSheet, Button, FlatList, Pressable } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useCart } from '@/providers/CartProvider';
@@ -7,7 +7,7 @@ import { Link } from 'expo-router';
 import CartListItem from '@/components/CartListItem';
 
 const CartScreen = () => {
-    const { items } = useCart();
+    const { items, total } = useCart();
 
     if (items.length === 0) {
         return (
@@ -25,12 +25,18 @@ const CartScreen = () => {
 
     return (
 
-        <View>
+        <View style={{ padding: 10, }}>
             <FlatList
                 data={items}
                 renderItem={({ item }) => <CartListItem cartItem={item} />}
-                contentContainerStyle={{ padding: 10, gap: 10 }}
+                contentContainerStyle={{ gap: 10 }}
             />
+
+            <Text style={{ marginTop: 20, fontSize: 20, fontWeight: '500' }}>Total: GHS {total}</Text>
+
+            <Pressable style={styles.button}>
+                <Text style={styles.text}>Checkout</Text>
+            </Pressable>
 
             <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
         </View>
@@ -78,6 +84,17 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#2e78b7',
     },
+    text: {
+        color: '#FFFFFF',
+        fontWeight: 'bold'
+    },
+    button: {
+        backgroundColor: '#A146E2',
+        padding: 15,
+        borderRadius: 10,
+        alignItems: 'center',
+        marginTop: 10,
+    }
 });
 
 export default CartScreen;
