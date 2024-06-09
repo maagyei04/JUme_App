@@ -26,9 +26,13 @@ function CustomHeader() {
           <AntDesign name="camerao" size={25} style={styles.icon} />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.cartIcon}>
-        <AntDesign name="shoppingcart" size={25} style={styles.icon} />
-      </TouchableOpacity>
+      <Link href="/cart" asChild>
+        <Pressable style={styles.cartIcon}>
+          {({ pressed }) => (
+            <AntDesign name="shoppingcart" size={25} style={styles.icon} />
+          )}
+        </Pressable>
+      </Link>
     </View>
   );
 }
@@ -83,6 +87,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   searchContainer: {
+    marginTop: 35,
     flexDirection: 'row',
     padding: 20,
     alignItems: 'center',
