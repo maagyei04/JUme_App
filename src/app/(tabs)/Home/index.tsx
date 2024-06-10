@@ -2,7 +2,7 @@ import { Category, Product } from '@/types';
 import React, { useRef, useState, useEffect } from 'react';
 import { View, Text, Image, Pressable, StyleSheet, ScrollView, FlatList, ImageSourcePropType } from 'react-native';
 import { useCart } from '@/providers/CartProvider';
-import { Link, useRouter } from 'expo-router';
+import { Link, useRouter, useSegments } from 'expo-router';
 import { AntDesign } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -76,6 +76,8 @@ const categories = [
 ]
 
 const ProductListItem = ({ product, onAddToCart }: ProductListItemProps) => {
+  const segments = useSegments();
+
   const [isFavorite, setIsFavorite] = useState(false);
   const [lastPress, setLastPress] = useState(0);
 
@@ -99,7 +101,7 @@ const ProductListItem = ({ product, onAddToCart }: ProductListItemProps) => {
         <View style={styles.imageContainer}>
           <Image source={product.image} style={styles.productImage} />
           <Pressable style={styles.favouriteButton} onPress={handleFavoriteToggle}>
-            <AntDesign name={isFavorite ? "heart" : "hearto"} size={20} color={isFavorite ? '#ff69b4' : '#A146E2'} />
+            <AntDesign name={isFavorite ? "heart" : "hearto"} size={20} color={isFavorite ? '#FF007F' : '#A146E2'} />
           </Pressable>
         </View>
         <Text style={styles.productText}>{product.name}</Text>

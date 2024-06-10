@@ -1,11 +1,12 @@
 import React from 'react';
 import { AntDesign } from '@expo/vector-icons';
-import { Link, Tabs } from 'expo-router';
+import { Link, Redirect, Tabs } from 'expo-router';
 import { Pressable, View, TextInput, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
 import Colors from '@constants/Colors';
 import { useColorScheme } from '@components/useColorScheme';
 import { useClientOnlyValue } from '@components/useClientOnlyValue';
+import { useAuth } from '@/providers/AuthProvider';
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof AntDesign>['name'];
@@ -39,6 +40,11 @@ function CustomHeader() {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { session } = useAuth();
+
+  if (!session) {
+    return <Redirect href={'/'} />
+  }
 
   return (
     <Tabs

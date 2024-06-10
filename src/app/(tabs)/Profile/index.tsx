@@ -1,16 +1,46 @@
+import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/providers/AuthProvider';
 import { AntDesign } from '@expo/vector-icons';
-import React from 'react';
+import { Link, router } from 'expo-router';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Pressable, ScrollView } from 'react-native';
 
 export default function ProfileScreen() {
+  const [userLoggedIn, setUserLoggedIn] = useState(false);
+  const { session } = useAuth();
+
+  useEffect(() => {
+    if (session) {
+      setUserLoggedIn(true);
+    } else {
+      setUserLoggedIn(false);
+    }
+  }, [session]);
+
   return (
     <ScrollView style={styles.container}>
 
       {/* Welcome Section */}
-      <View style={styles.welcomeSection}>
-        <Text style={styles.welcomeText}>Welcome Joey</Text>
-        <Text style={styles.emailText}>joey23@gmail.com</Text>
-      </View>
+      {userLoggedIn &&
+        <View style={styles.welcomeSection}>
+          <Text style={styles.welcomeText}>Welcome Joey</Text>
+          <Text style={styles.emailText}>joey23@gmail.com</Text>
+        </View>
+      }
+
+      {userLoggedIn === false &&
+        <View style={styles.welcomeSection2}>
+          <View>
+            <Text style={styles.textContainer}>Welcome</Text>
+            <Text style={styles.textContainer2}>Enter your account</Text>
+          </View>
+          <Link href={'/(auth)/AuthScreen/'} asChild>
+            <Pressable style={styles.buttonStyle}>
+              <Text style={styles.loginButton}>Login/SignUp</Text>
+            </Pressable>
+          </Link>
+        </View>
+      }
 
       {/* Account Section */}
       <Text style={styles.sectionTitle}>MY JUME ACCOUNT</Text>
@@ -49,9 +79,11 @@ export default function ProfileScreen() {
       </View>
 
       {/* Logout Button */}
-      <Pressable style={styles.logoutButton}>
-        <Text style={styles.logoutText}>LOGOUT</Text>
-      </Pressable>
+      {userLoggedIn &&
+        <Pressable onPress={() => supabase.auth.signOut().then(() => router.push('/(auth)/AuthScreen/'))} style={styles.logoutButton}>
+          <Text style={styles.logoutText}>LOGOUT</Text>
+        </Pressable>
+      }
 
     </ScrollView>
   );
@@ -83,6 +115,32 @@ const styles = StyleSheet.create({
   welcomeSection: {
     backgroundColor: '#E0C3F7',
     padding: 20,
+  },
+  welcomeSection2: {
+    backgroundColor: '#A146E2',
+    padding: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20
+  },
+  textContainer: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 20
+  },
+  textContainer2: {
+    color: 'white'
+  },
+  buttonStyle: {
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 15,
+    borderRadius: 10,
+  },
+  loginButton: {
+    fontWeight: 'bold',
+    color: '#A146E2',
   },
   welcomeText: {
     color: '#FF007F',
