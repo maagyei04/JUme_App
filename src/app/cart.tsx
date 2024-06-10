@@ -15,7 +15,7 @@ const CartScreen = () => {
                 <FontAwesome name='shopping-cart' size={80} color="#888" />
                 <Text style={styles.emptyText}>Your cart is empty!</Text>
                 <Text style={styles.suggestionText}>Browse our categories and discover our best deals!</Text>
-                <Link href="/" style={styles.link}>
+                <Link href="/(tabs)/Home/" style={styles.link}>
                     <Text style={styles.linkText}>Start Shopping!</Text>
                 </Link>
                 <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
