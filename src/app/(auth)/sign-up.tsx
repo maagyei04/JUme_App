@@ -8,6 +8,7 @@ const SignUp = () => {
     const [hidden, setHidden] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('');
     const [loading, setLoading] = useState(false);
 
     async function signUpWithEmail() {
@@ -33,7 +34,12 @@ const SignUp = () => {
         <View style={styles.container}>
             <Text style={styles.title}>Sign up to get <Text style={styles.highlight}>15% off</Text> your first order</Text>
 
-            <TextInput placeholder="Username" style={styles.input} />
+            <TextInput
+                value={username}
+                onChangeText={setUsername}
+                placeholder="Username"
+                style={styles.input}
+            />
 
             <TextInput
                 value={email}

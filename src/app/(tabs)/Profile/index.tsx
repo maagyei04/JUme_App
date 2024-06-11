@@ -7,7 +7,7 @@ import { View, Text, StyleSheet, Pressable, ScrollView } from 'react-native';
 
 export default function ProfileScreen() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
-  const { session } = useAuth();
+  const { session, profile } = useAuth();
 
   useEffect(() => {
     if (session) {
@@ -23,8 +23,8 @@ export default function ProfileScreen() {
       {/* Welcome Section */}
       {userLoggedIn &&
         <View style={styles.welcomeSection}>
-          <Text style={styles.welcomeText}>Welcome Joey</Text>
-          <Text style={styles.emailText}>joey23@gmail.com</Text>
+          <Text style={styles.welcomeText}>Welcome !</Text>
+          <Text style={styles.emailText}>{profile?.email}</Text>
         </View>
       }
 
@@ -43,7 +43,7 @@ export default function ProfileScreen() {
       }
 
       {/* Account Section */}
-      <Text style={styles.sectionTitle}>MY JUME ACCOUNT</Text>
+      <Text style={styles.sectionTitle}>JUme ACCOUNT</Text>
       <View style={styles.accountSection}>
         {[
           { label: 'Orders', icon: "isv" },
@@ -64,7 +64,7 @@ export default function ProfileScreen() {
       </View>
 
       {/* Settings Section */}
-      <Text style={styles.sectionTitle}>MY SETTINGS</Text>
+      <Text style={styles.sectionTitle}>SETTINGS</Text>
       <View style={styles.settingsSection}>
         {[
           { label: 'Address Book', icon: "contacts" },

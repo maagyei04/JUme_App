@@ -1,5 +1,5 @@
 import React from 'react';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Feather, FontAwesome5 } from '@expo/vector-icons';
 import { Link, Tabs } from 'expo-router';
 import { Pressable, View, TextInput, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
@@ -59,21 +59,21 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="Feed"
-        options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="notification" color={color} />,
-        }}
-      />
-      <Tabs.Screen
         name="Profile"
         options={{
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
         }}
       />
       <Tabs.Screen
+        name="Feed"
+        options={{
+          tabBarIcon: ({ color }) => <TabBarIcon name="notification" color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="Help"
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="info" color={color} />,
+          tabBarIcon: ({ color }) => <Feather name="help-circle" size={28} color={color} />,
         }}
       />
     </Tabs>
