@@ -1,10 +1,11 @@
 import { Category, Product } from '@/types';
 import React, { useRef, useState, useEffect } from 'react';
-import { View, Text, Image, Pressable, StyleSheet, ScrollView, FlatList, ImageSourcePropType } from 'react-native';
+import { View, Text, Image, Pressable, StyleSheet, ScrollView, FlatList, ImageSourcePropType, TouchableOpacity } from 'react-native';
 import { useCart } from '@/providers/CartProvider';
 import { Link, useRouter, useSegments } from 'expo-router';
 import { AntDesign } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { ProductSize } from '@/types';
 
 type ProductListItemProps = {
   product: Product;
@@ -23,54 +24,54 @@ type BannerProps = {
 const products = [
   {
     id: 1,
-    name: 'sample',
-    price: 139,
-    image: require('@assets/images/watch.png')
+    name: 'Wireless Waterproof Bluetooth JBL Speaker + charging cable and holder - Red',
+    price: 150,
+    image: require('@assets/images/speaker.png')
   },
   {
     id: 2,
-    name: 'sample',
-    price: 139,
-    image: require('@assets/images/watch.png')
+    name: 'LG T1066NEFVF2 - 10kg - Smart Inverter  Automatic Washing Machine Black - Grey',
+    price: 6387,
+    image: require('@assets/images/washingmachine.png')
   },
   {
     id: 3,
-    name: 'sample',
-    price: 139,
-    image: require('@assets/images/watch.png')
+    name: 'Sports vintage bag - Black',
+    price: 85.99,
+    image: require('@assets/images/bag.png')
   },
   {
     id: 4,
-    name: 'sample',
+    name: 'Gaming Headset - Black',
     price: 139,
-    image: require('@assets/images/watch.png')
+    image: require('@assets/images/headset3.png')
   },
 ]
 
 const categories = [
   {
     id: 1,
-    name: 'sample',
-    image: require('@assets/images/watch.png'),
+    name: 'Phones',
+    image: require('@assets/images/smartphones.png'),
   },
   {
     id: 2,
-    name: 'sample2',
-    image: require('@assets/images/watch.png'),
+    name: 'Beauty',
+    image: require('@assets/images/beauty2.png'),
   },
   {
     id: 3,
-    name: 'sample3',
-    image: require('@assets/images/watch.png'),
+    name: 'Sneakers',
+    image: require('@assets/images/sneakers.png'),
   },
   {
     id: 4,
-    name: 'sample4',
-    image: require('@assets/images/watch.png'),
+    name: 'Electronics',
+    image: require('@assets/images/electronics.png'),
   },
   {
     id: 5,
-    name: 'sample5',
+    name: 'Watches',
     image: require('@assets/images/watch.png'),
   },
 ]
@@ -97,19 +98,19 @@ const ProductListItem = ({ product, onAddToCart }: ProductListItemProps) => {
 
   return (
     <Link href={`/${product.id}`} asChild>
-      <Pressable style={styles.product} onPressIn={handleDoubleTap}>
+      <TouchableOpacity style={styles.product} onPressIn={handleDoubleTap}>
         <View style={styles.imageContainer}>
           <Image source={product.image} style={styles.productImage} />
-          <Pressable style={styles.favouriteButton} onPress={handleFavoriteToggle}>
+          <TouchableOpacity style={styles.favouriteButton} onPress={handleFavoriteToggle}>
             <AntDesign name={isFavorite ? "heart" : "hearto"} size={20} color={isFavorite ? '#FF007F' : '#A146E2'} />
-          </Pressable>
+          </TouchableOpacity>
         </View>
         <Text style={styles.productText}>{product.name}</Text>
         <Text style={styles.productPrice}>GHS {product.price}.00</Text>
-        <Pressable style={styles.liveChatButton} onPress={() => onAddToCart(product)}>
+        <TouchableOpacity style={styles.liveChatButton} onPress={() => onAddToCart(product)}>
           <Text style={styles.flashSalesText}>Add To Cart</Text>
-        </Pressable>
-      </Pressable>
+        </TouchableOpacity>
+      </TouchableOpacity>
     </Link>
   );
 };
@@ -117,10 +118,10 @@ const ProductListItem = ({ product, onAddToCart }: ProductListItemProps) => {
 const CategoryListItem = ({ category }: CategoryListItemProps) => {
   return (
     <View style={styles.categoryContainer}>
-      <Pressable style={styles.category}>
+      <TouchableOpacity style={styles.category}>
         <Image source={category.image} style={styles.categoryIcon} />
         <Text style={styles.categoryText}>{category.name}</Text>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -135,9 +136,9 @@ const Banner = ({ index, banners }: BannerProps) => (
     <View style={{ flexDirection: 'row' }}>
       <View>
         <Text style={styles.bannerText}>50% off in Apple Watch</Text>
-        <Pressable style={styles.shopNowButton}>
+        <TouchableOpacity style={styles.shopNowButton}>
           <Text style={styles.shopNowText}>Shop Now !</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
       <Image source={banners[index].image} style={styles.bannerImage} />
     </View>
@@ -153,10 +154,10 @@ export default function HomeScreen() {
 
   const banners = [
     { image: require('@assets/images/watch.png') },
-    { image: require('@assets/images/watch.png') },
-    { image: require('@assets/images/watch.png') },
-    { image: require('@assets/images/watch.png') },
-    { image: require('@assets/images/watch.png') },
+    { image: require('@assets/images/headset.png') },
+    { image: require('@assets/images/shirts.png') },
+    { image: require('@assets/images/laptop.png') },
+    { image: require('@assets/images/headset2.png') },
   ];
 
   const addToCart = (product: Product) => {

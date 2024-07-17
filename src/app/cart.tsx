@@ -5,6 +5,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useCart } from '@/providers/CartProvider';
 import { Link } from 'expo-router';
 import CartListItem from '@/components/CartListItem';
+import { TouchableOpacity } from 'react-native';
 
 const CartScreen = () => {
     const { items, total } = useCart();
@@ -34,9 +35,9 @@ const CartScreen = () => {
 
             <Text style={{ marginTop: 20, fontSize: 20, fontWeight: '500' }}>Total: GHS {total}</Text>
 
-            <Pressable style={styles.button}>
+            <TouchableOpacity style={styles.button}>
                 <Text style={styles.text}>Checkout</Text>
-            </Pressable>
+            </TouchableOpacity>
 
             <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
         </View>

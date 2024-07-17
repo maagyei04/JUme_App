@@ -17,7 +17,7 @@ const CartListItem = ({ cartItem }: CartListItemProps) => {
     return (
         <View style={styles.container}>
             <Image
-                source={defaultImage}
+                source={cartItem.product.image}
                 style={styles.image}
                 resizeMode="contain"
             />

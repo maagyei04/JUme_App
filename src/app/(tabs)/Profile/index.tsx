@@ -17,6 +17,8 @@ export default function ProfileScreen() {
     }
   }, [session]);
 
+  console.log(profile);
+
   return (
     <ScrollView style={styles.container}>
 
@@ -24,7 +26,7 @@ export default function ProfileScreen() {
       {userLoggedIn &&
         <View style={styles.welcomeSection}>
           <Text style={styles.welcomeText}>Welcome !</Text>
-          <Text style={styles.emailText}>{profile?.email}</Text>
+          <Text style={styles.emailText}>{profile?.username} ...</Text>
         </View>
       }
 
