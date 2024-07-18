@@ -1,41 +1,76 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { View, Text, Image, Pressable, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
-import { Link, Stack, useLocalSearchParams } from 'expo-router';
+import { Link, Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { AntDesign, FontAwesome, FontAwesome5, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import { Product } from '@/types';
+import { useCart } from '@/providers/CartProvider';
 
 const { width, height } = Dimensions.get('window');
+
+type ProductDetailsScreenProps = {
+    productt: Product;
+    onAddToCart: (productt: Product) => void;
+}
+
+const products = [
+    {
+        id: 1,
+        name: 'Wireless Waterproof Bluetooth JBL Speaker + charging cable and holder - Red',
+        price: 150,
+        image: require('@assets/images/speaker.png')
+    },
+    {
+        id: 2,
+        name: 'LG T1066NEFVF2 - 10kg - Smart Inverter Automatic Washing Machine Black - Grey',
+        price: 6387,
+        image: require('@assets/images/washingmachine.png')
+    },
+    {
+        id: 3,
+        name: 'Sports vintage bag - Black',
+        price: 139,
+        image: require('@assets/images/bag.png')
+    },
+    {
+        id: 4,
+        name: 'Gaming Headset - Black',
+        price: 139,
+        image: require('@assets/images/headset3.png')
+    },
+]
 
 const ProductDetailsScreen = () => {
     const { id } = useLocalSearchParams();
 
-    const products = [
-        {
-            id: 1,
-            name: 'Wireless Waterproof Bluetooth JBL Speaker + charging cable and holder - Red',
-            price: 150,
-            image: require('@assets/images/speaker.png')
-        },
-        {
-            id: 2,
-            name: 'LG T1066NEFVF2 - 10kg - Smart Inverter Automatic Washing Machine Black - Grey',
-            price: 6387,
-            image: require('@assets/images/washingmachine.png')
-        },
-        {
-            id: 3,
-            name: 'Sports vintage bag - Black',
-            price: 139,
-            image: require('@assets/images/bag.png')
-        },
-        {
-            id: 4,
-            name: 'Gaming Headset - Black',
-            price: 139,
-            image: require('@assets/images/headset3.png')
-        },
-    ]
-
     const product = products.find((p) => p.id.toString() === id);
+
+    const { addItem } = useCart();
+    const router = useRouter();
+
+    const [isFavorite, setIsFavorite] = useState(false);
+    const [lastPress, setLastPress] = useState(0);
+
+    const handleFavoriteToggle = () => {
+        setIsFavorite(!isFavorite);
+    };
+
+    const handleDoubleTap = () => {
+        const time = new Date().getTime();
+        const delta = time - lastPress;
+
+        if (delta < 300) {
+            handleFavoriteToggle();
+        }
+        setLastPress(time);
+    };
+
+    const addToCart = (product: Product) => {
+        if (!product) {
+            return;
+        }
+        addItem(product, 'M');
+        router.push('/cart');
+    };
 
     if (!product) {
         return <Text>Product not found</Text>;
@@ -45,22 +80,21 @@ const ProductDetailsScreen = () => {
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 <Stack.Screen options={{
-                    title: 'Product Details: ' + product?.name,
-                    headerRight: () => {
-                        return <Link href="/cart" asChild>
+                    title: `Product Details: ${product?.name}`,
+                    headerRight: () => (
+                        <Link href="/cart" asChild>
                             <Pressable style={styles.cartIcon}>
-                                {({ pressed }) => (
-                                    <AntDesign name="shoppingcart" size={25} style={styles.icon} />
-                                )}
+                                <AntDesign name="shoppingcart" size={25} style={styles.icon} />
                             </Pressable>
-                        </Link>;
-                    }
+                        </Link>
+                    )
                 }} />
 
                 <Image
                     source={product?.image}
                     style={styles.productImage}
                 />
+
                 <View style={styles.detailsContainer}>
                     <Text style={styles.productTitle}>
                         {product?.name}
@@ -87,8 +121,8 @@ const ProductDetailsScreen = () => {
                         <TouchableOpacity style={styles.shareButton}>
                             <FontAwesome5 name="share" size={24} color="gray" />
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.wishlistButton}>
-                            <MaterialCommunityIcons name="heart-outline" size={24} color="pink" />
+                        <TouchableOpacity style={styles.wishlistButton} onPress={handleFavoriteToggle}>
+                            <MaterialCommunityIcons name={isFavorite ? "heart" : "heart-outline"} size={24} color={isFavorite ? '#FF007F' : '#A146E2'} />
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -127,24 +161,21 @@ const ProductDetailsScreen = () => {
                     <Text>- Easy To Assemble...</Text>
                 </View>
 
-                <View style={styles.reviewsContainer}>
-                    <Text style={styles.sectionTitle}>Product Rating & Reviews</Text>
-                    <Text style={styles.rating}>4.3/5 | 1 rating</Text>
-                    <Text style={styles.reviewText}>I like it</Text>
-                    <Text>Stable, can withstand 15kgs of weight, and looks as in th picture</Text>
-                    <Text style={styles.reviewAuthor}>by George</Text>
-                    <Text style={styles.verifiedPurchase}>Verified Purchase</Text>
-                </View>
             </ScrollView>
 
             <View style={styles.bottomNavBar}>
-                <TouchableOpacity style={styles.navButton}>
-                    <Ionicons name="home-outline" size={24} color="#fff" />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.navButton}>
-                    <Ionicons name="call-outline" size={24} color="#fff" />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.addToCartButton}>
+                <Link href='/(tabs)/Home/' asChild>
+                    <TouchableOpacity style={styles.navButton}>
+                        <Ionicons name="home-outline" size={24} color="#fff" />
+                    </TouchableOpacity>
+                </Link>
+                <Link href='tel:+233541190955' asChild>
+                    <TouchableOpacity style={styles.navButton}>
+                        <Ionicons name="call-outline" size={24} color="#fff" />
+                    </TouchableOpacity>
+                </Link>
+
+                <TouchableOpacity style={styles.addToCartButton} onPress={() => addToCart(product)}>
                     <Text style={styles.addToCartButtonText}>ADD TO CART</Text>
                     <FontAwesome name="shopping-cart" size={24} color="#fff" />
                 </TouchableOpacity>
@@ -161,7 +192,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     scrollViewContent: {
-        paddingBottom: 100, // Adjust to ensure ScrollView doesn't overlap with the button
+        paddingBottom: 100,
     },
     cartIcon: {
         marginRight: 15,
@@ -279,22 +310,20 @@ const styles = StyleSheet.create({
         bottom: 0,
         flexDirection: 'row',
         width: '100%',
-        height: 60,
-        backgroundColor: 'pink',
+        height: 80,
+        backgroundColor: 'gray',
         alignItems: 'center',
-        justifyContent: 'space-around',
     },
     navButton: {
         flex: 1,
         alignItems: 'center',
-        borderRadius: 50
     },
     addToCartButton: {
-        flex: 2,
+        flex: 3,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'hotpink',
+        backgroundColor: '#A146E2',
         height: '100%',
     },
     addToCartButtonText: {

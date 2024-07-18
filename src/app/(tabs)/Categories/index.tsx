@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, Image, Pressable, StyleSheet, ScrollView, FlatList } from 'react-native';
+import { fetchCategories } from '@/api/categories';
 
 interface Product {
   name: string;
-  image: any; // You can change 'any' to the specific type if you know it (e.g., ImageSourcePropType)
+  image: any;
 }
 
 const categories = [
@@ -16,26 +17,24 @@ const products: { [key: string]: Product[] } = {
   'Grocery': [
     { name: 'Tomato paste', image: require('@assets/images/watch.png') },
     { name: 'Safari puffs', image: require('@assets/images/watch.png') },
-    // Add more products here...
   ],
   'Health & Beauty': [
     { name: 'Product 1', image: require('@assets/images/watch.png') },
     { name: 'Product 2', image: require('@assets/images/watch.png') },
-    // Add more products here...
   ],
-  // Add more categories and products here...
 };
 
 export default function CategoryScreen() {
+  const { data: categories, isLoading, error } = fetchCategories();
   const [selectedCategory, setSelectedCategory] = useState<string>('Grocery');
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.leftContainer}>
-        {categories.map(category => (
+        {categories && categories.map(category => (
           <Pressable key={category} style={[styles.category, selectedCategory === category && styles.selectedCategoryContainer]} onPress={() => setSelectedCategory(category)}>
             <Text style={[styles.categoryText, selectedCategory === category && styles.selectedCategoryText]}>
-              {category}
+              {category.name}
             </Text>
           </Pressable>
         ))}

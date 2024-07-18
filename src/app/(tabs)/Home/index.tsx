@@ -5,7 +5,8 @@ import { useCart } from '@/providers/CartProvider';
 import { Link, useRouter, useSegments } from 'expo-router';
 import { AntDesign } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ProductSize } from '@/types';
+import { ActivityIndicator } from 'react-native';
+import { fetchProducts } from '@/api/products';
 
 type ProductListItemProps = {
   product: Product;
@@ -20,33 +21,6 @@ type BannerProps = {
   index: number;
   banners: { image: ImageSourcePropType }[];
 }
-
-const products = [
-  {
-    id: 1,
-    name: 'Wireless Waterproof Bluetooth JBL Speaker + charging cable and holder - Red',
-    price: 150,
-    image: require('@assets/images/speaker.png')
-  },
-  {
-    id: 2,
-    name: 'LG T1066NEFVF2 - 10kg - Smart Inverter  Automatic Washing Machine Black - Grey',
-    price: 6387,
-    image: require('@assets/images/washingmachine.png')
-  },
-  {
-    id: 3,
-    name: 'Sports vintage bag - Black',
-    price: 85.99,
-    image: require('@assets/images/bag.png')
-  },
-  {
-    id: 4,
-    name: 'Gaming Headset - Black',
-    price: 139,
-    image: require('@assets/images/headset3.png')
-  },
-]
 
 const categories = [
   {
@@ -146,6 +120,10 @@ const Banner = ({ index, banners }: BannerProps) => (
 );
 
 export default function HomeScreen() {
+  const { data: products, isLoading, error } = fetchProducts();
+
+  console.log('p:', products);
+
   const { addItem } = useCart();
   const [bannerIndex, setBannerIndex] = useState(0);
   const bannerScrollRef = useRef<ScrollView>(null);
@@ -192,6 +170,7 @@ export default function HomeScreen() {
     }
   }, [bannerIndex]);
 
+
   return (
     <ScrollView style={styles.container}>
       {/* Banner */}
@@ -222,12 +201,18 @@ export default function HomeScreen() {
 
       {/* Latest Products */}
       <View style={styles.latestProducts}>
-        <Text style={styles.latestProductsText}>Latest Products</Text>
-        <Pressable style={styles.seeAllButton}>
-          <Text style={styles.seeAllText2}>SEE ALL</Text>
-        </Pressable>
+        {isLoading ? <ActivityIndicator /> : (
+          <>
+            <Text style={styles.latestProductsText}>Latest Products</Text>
+            <Pressable style={styles.seeAllButton}>
+              <Text style={styles.seeAllText2}>SEE ALL</Text>
+            </Pressable>
+          </>
+        )}
+        {error && <Text>Error: {error.message}</Text>}
       </View>
       <FlatList
+
         data={products}
         numColumns={2}
         renderItem={({ item }) => <ProductListItem product={item} onAddToCart={addToCart} />}

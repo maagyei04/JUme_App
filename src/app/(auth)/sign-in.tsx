@@ -12,13 +12,22 @@ const LogIn = () => {
 
     async function signInWithEmail() {
         setLoading(true);
-        const { error } = await supabase.auth.signInWithPassword({
-            email: email,
-            password: password,
-        });
+        try {
+            const { error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
 
-        if (error) Alert.alert(error.message);
-        setLoading(false);
+            if (error) {
+                console.error('Supabase error:', error);
+                Alert.alert('Error', error.message);
+            }
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            Alert.alert('Error', 'An unexpected error occurred');
+        } finally {
+            setLoading(false);
+        }
     }
 
     const showPassword = () => {

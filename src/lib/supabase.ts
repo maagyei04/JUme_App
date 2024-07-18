@@ -24,4 +24,10 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
         persistSession: true,
         detectSessionInUrl: false,
     },
+    db: {
+        schema: 'public',
+    },
+    global: {
+        headers: { 'X-App-Name': 'JUme_App' },
+    },
 });
