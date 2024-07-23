@@ -1,10 +1,13 @@
 import React from 'react';
 import { AntDesign, Feather, FontAwesome5 } from '@expo/vector-icons';
-import { Link, Tabs } from 'expo-router';
-import { Pressable, View, TextInput, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { Link, Tabs, useRouter } from 'expo-router';
+import { Pressable, View, TextInput, Image, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import SearchBar from '@/components/SearchBar';
+import { useCart } from '@/providers/CartProvider';
 
 import Colors from '@constants/Colors';
 import { useColorScheme } from '@components/useColorScheme';
+import { useSearch } from '@/providers/SearchProvider';
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof AntDesign>['name'];
@@ -14,21 +17,29 @@ function TabBarIcon(props: {
 }
 
 function CustomHeader() {
+  const { setSearchTerm, setIsSearchFocused } = useSearch();
+  const { items } = useCart();
+
+  const itemCount = items.length;
+
   return (
-    <View style={styles.searchContainer}>
-      <View style={styles.searchItem}>
-        <TouchableOpacity style={styles.cartIcon}>
-          <AntDesign name="search1" size={25} style={styles.icon} />
-        </TouchableOpacity>
-        <TextInput style={styles.searchInput} placeholder="Search" />
-        <TouchableOpacity style={styles.cartIcon}>
-          <AntDesign name="camerao" size={25} style={styles.icon} />
-        </TouchableOpacity>
-      </View>
+    <View style={styles.headerContainer}>
+      <SearchBar
+        onFocus={() => setIsSearchFocused(true)}
+        onBlur={() => setIsSearchFocused(false)}
+        onChangeText={setSearchTerm}
+      />
       <Link href="/cart" asChild>
         <Pressable style={styles.cartIcon}>
           {({ pressed }) => (
-            <AntDesign name="shoppingcart" size={25} style={styles.icon} />
+            <View>
+              <AntDesign name="shoppingcart" size={25} style={styles.icon} />
+              {itemCount > 0 && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>{itemCount}</Text>
+                </View>
+              )}
+            </View>
           )}
         </Pressable>
       </Link>
@@ -85,36 +96,37 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  searchContainer: {
-    marginTop: 35,
+  headerContainer: {
     flexDirection: 'row',
-    padding: 20,
     alignItems: 'center',
-  },
-  searchItem: {
-    flex: 1,
-    flexDirection: 'row',
-    borderColor: '#fff',
+    paddingHorizontal: 10,
+    paddingTop: 40,
+    paddingBottom: 10,
     backgroundColor: '#fff',
-    borderWidth: 1,
-    borderRadius: 20,
-    alignItems: 'center',
-    paddingHorizontal: 10,
-  },
-  searchInput: {
-    flex: 1,
-    height: 50,
-    paddingHorizontal: 10,
-  },
-  searchIcon: {
-    marginLeft: 10,
   },
   cartIcon: {
-    marginLeft: 10,
+    padding: 5,
+    position: 'relative',
   },
   icon: {
     width: 24,
     height: 24,
+  },
+  badge: {
+    position: 'absolute',
+    right: -6,
+    top: -3,
+    backgroundColor: 'black',
+    borderRadius: 9,
+    width: 18,
+    height: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  badgeText: {
+    color: 'white',
+    fontSize: 12,
+    fontWeight: 'bold',
   },
   banner: {
     backgroundColor: '#e7c5ff',

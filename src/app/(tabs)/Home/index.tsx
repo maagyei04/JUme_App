@@ -1,12 +1,12 @@
 import { Category, Product } from '@/types';
-import React, { useRef, useState, useEffect } from 'react';
-import { View, Text, Image, Pressable, StyleSheet, ScrollView, FlatList, ImageSourcePropType, TouchableOpacity } from 'react-native';
+import React, { useRef, useState, useEffect, useCallback, useMemo } from 'react';
+import { View, Text, Image, Pressable, StyleSheet, ScrollView, FlatList, ImageSourcePropType, TouchableOpacity, RefreshControl, ActivityIndicator } from 'react-native';
 import { useCart } from '@/providers/CartProvider';
 import { Link, useRouter, useSegments } from 'expo-router';
 import { AntDesign } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ActivityIndicator } from 'react-native';
-import { fetchProducts } from '@/api/products';
+import { fetchProducts, fetchProductsBySearchTerm } from '@/api/products';
+import { useSearch } from '@/providers/SearchProvider';
 
 type ProductListItemProps = {
   product: Product;
@@ -35,7 +35,7 @@ const categories = [
   },
   {
     id: 3,
-    name: 'Sneakers',
+    name: 'Fashion',
     image: require('@assets/images/sneakers.png'),
   },
   {
@@ -90,9 +90,15 @@ const ProductListItem = ({ product, onAddToCart }: ProductListItemProps) => {
 };
 
 const CategoryListItem = ({ category }: CategoryListItemProps) => {
+  const router = useRouter();
+
+  const handlePress = () => {
+    router.push(`/category/${encodeURIComponent(category.name)}`);
+  };
+
   return (
     <View style={styles.categoryContainer}>
-      <TouchableOpacity style={styles.category}>
+      <TouchableOpacity style={styles.category} onPress={handlePress}>
         <Image source={category.image} style={styles.categoryIcon} />
         <Text style={styles.categoryText}>{category.name}</Text>
       </TouchableOpacity>
@@ -107,7 +113,7 @@ const Banner = ({ index, banners }: BannerProps) => (
     start={{ x: 0, y: 0 }}
     end={{ x: 1, y: 1 }}
   >
-    <View style={{ flexDirection: 'row' }}>
+    <View style={{ flexDirection: 'row', height: 110 }}>
       <View>
         <Text style={styles.bannerText}>50% off in Apple Watch</Text>
         <TouchableOpacity style={styles.shopNowButton}>
@@ -119,16 +125,51 @@ const Banner = ({ index, banners }: BannerProps) => (
   </LinearGradient>
 );
 
+function useCountdown(targetDate: Date) {
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(targetDate));
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft(targetDate));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [targetDate]);
+
+  return timeLeft;
+}
+
+function calculateTimeLeft(targetDate: Date) {
+  const difference = +targetDate - +new Date();
+
+  if (difference > 0) {
+    return {
+      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((difference / 1000 / 60) % 60),
+      seconds: Math.floor((difference / 1000) % 60)
+    };
+  }
+
+  return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+}
+
 export default function HomeScreen() {
-  const { data: products, isLoading, error } = fetchProducts();
-
-  console.log('p:', products);
-
+  const { data: products, isLoading, error, refetch } = fetchProducts();
   const { addItem } = useCart();
   const [bannerIndex, setBannerIndex] = useState(0);
   const bannerScrollRef = useRef<ScrollView>(null);
-
   const router = useRouter();
+  const [refreshing, setRefreshing] = useState(false);
+  const { debouncedSearchTerm } = useSearch();
+
+  // Move this hook call outside of any conditional rendering
+  const { data: searchResults, isLoading: searchLoading, error: searchError } = fetchProductsBySearchTerm(debouncedSearchTerm);
+
+  const targetDate = useMemo(() => new Date('2024-07-31T23:59:59'), []);
+  const timeLeft = useCountdown(targetDate);
+
+  console.log('p:', products);
 
   const banners = [
     { image: require('@assets/images/watch.png') },
@@ -170,55 +211,98 @@ export default function HomeScreen() {
     }
   }, [bannerIndex]);
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    refetch().then(() => {
+      setRefreshing(false);
+    });
+  }, [refetch]);
+
+  const renderItem = ({ item }: { item: Product }) => (
+    <ProductListItem product={item} onAddToCart={addToCart} />
+  );
 
   return (
-    <ScrollView style={styles.container}>
-      {/* Banner */}
-      <ScrollView horizontal pagingEnabled ref={bannerScrollRef} showsHorizontalScrollIndicator={false}>
-        {banners.map((banner, index) => (
-          <Banner key={index} index={bannerIndex} banners={banners} />
-        ))}
-      </ScrollView>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      {debouncedSearchTerm === '' ? (
+        <>
+          {/* Banner */}
+          <ScrollView horizontal pagingEnabled ref={bannerScrollRef} showsHorizontalScrollIndicator={false}>
+            {banners.map((banner, index) => (
+              <Banner key={index} index={bannerIndex} banners={banners} />
+            ))}
+          </ScrollView>
 
-      {/* Categories */}
-      <ScrollView horizontal style={styles.categories} showsHorizontalScrollIndicator={false}>
-        <FlatList
-          data={categories}
-          renderItem={({ item }) => <CategoryListItem category={item} />}
-          keyExtractor={(item) => item.id.toString()}
-          numColumns={categories.length}
-        />
-      </ScrollView>
+          {/* Categories */}
+          <ScrollView horizontal style={styles.categories} showsHorizontalScrollIndicator={false}>
+            <FlatList
+              data={categories}
+              renderItem={({ item }) => <CategoryListItem category={item} />}
+              keyExtractor={(item) => item.id.toString()}
+              numColumns={categories.length}
+            />
+          </ScrollView>
 
-      {/* Flash Sales */}
-      <View style={styles.flashSales}>
-        <Text style={styles.flashSalesText}>FLASH SALES</Text>
-        <Text style={styles.flashSalesTimer}>TIME LEFT: 02d : 23h : 48m</Text>
-        <Pressable style={styles.seeAllButton}>
-          <Text style={styles.seeAllText}>SEE ALL</Text>
-        </Pressable>
-      </View>
-
-      {/* Latest Products */}
-      <View style={styles.latestProducts}>
-        {isLoading ? <ActivityIndicator /> : (
-          <>
-            <Text style={styles.latestProductsText}>Latest Products</Text>
+          {/* Flash Sales */}
+          <View style={styles.flashSales}>
+            <Text style={styles.flashSalesText}>FLASH SALES</Text>
+            <Text style={styles.flashSalesTimer}>
+              TIME LEFT: {String(timeLeft.days).padStart(2, '0')}d :
+              {String(timeLeft.hours).padStart(2, '0')}h :
+              {String(timeLeft.minutes).padStart(2, '0')}m :
+              {String(timeLeft.seconds).padStart(2, '0')}s
+            </Text>
             <Pressable style={styles.seeAllButton}>
-              <Text style={styles.seeAllText2}>SEE ALL</Text>
+              <Text style={styles.seeAllText}>SEE ALL</Text>
             </Pressable>
-          </>
-        )}
-        {error && <Text>Error: {error.message}</Text>}
-      </View>
-      <FlatList
+          </View>
 
-        data={products}
-        numColumns={2}
-        renderItem={({ item }) => <ProductListItem product={item} onAddToCart={addToCart} />}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={styles.products}
-      />
+          {/* Latest Products */}
+          <View style={styles.latestProducts}>
+            {isLoading ? <ActivityIndicator /> : (
+              <>
+                <Text style={styles.latestProductsText}>Latest Products</Text>
+                <Pressable style={styles.seeAllButton} onPress={() => router.push('/Categories/')}>
+                  <Text style={styles.seeAllText2}>SEE ALL</Text>
+                </Pressable>
+              </>
+            )}
+            {error && <Text>Error: {error.message}</Text>}
+          </View>
+
+          <FlatList
+            data={products}
+            numColumns={2}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={styles.products}
+          />
+        </>
+      ) : (
+        <View style={styles.searchResultsContainer}>
+          {searchLoading ? (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ) : searchError ? (
+            <Text>Error: {searchError.message}</Text>
+          ) : (
+            <>
+              <Text style={styles.searchResultsText}>Search Results</Text>
+              <FlatList
+                data={searchResults}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id.toString()}
+                numColumns={2}
+                contentContainerStyle={styles.products}
+              />
+            </>
+          )}
+        </View>
+      )}
     </ScrollView>
   );
 }
@@ -303,7 +387,7 @@ const styles = StyleSheet.create({
   },
   categoryContainer: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 50,
+    borderRadius: 20,
     padding: 8,
     margin: 5,
     alignItems: 'center',
@@ -397,5 +481,15 @@ const styles = StyleSheet.create({
     top: 5,
     right: 5,
     backgroundColor: '#ffffff'
+  },
+  searchResultsContainer: {
+    flex: 1,
+    paddingTop: 20,
+  },
+  searchResultsText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    marginLeft: 10,
   },
 });

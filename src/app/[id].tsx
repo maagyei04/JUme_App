@@ -1,51 +1,24 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, Text, Image, Pressable, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, Image, Pressable, StyleSheet, ScrollView, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
 import { Link, Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { AntDesign, FontAwesome, FontAwesome5, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { Product } from '@/types';
 import { useCart } from '@/providers/CartProvider';
+import { fetchProductsById } from '@/api/products';
 
 const { width, height } = Dimensions.get('window');
 
-type ProductDetailsScreenProps = {
-    productt: Product;
-    onAddToCart: (productt: Product) => void;
-}
-
-const products = [
-    {
-        id: 1,
-        name: 'Wireless Waterproof Bluetooth JBL Speaker + charging cable and holder - Red',
-        price: 150,
-        image: require('@assets/images/speaker.png')
-    },
-    {
-        id: 2,
-        name: 'LG T1066NEFVF2 - 10kg - Smart Inverter Automatic Washing Machine Black - Grey',
-        price: 6387,
-        image: require('@assets/images/washingmachine.png')
-    },
-    {
-        id: 3,
-        name: 'Sports vintage bag - Black',
-        price: 139,
-        image: require('@assets/images/bag.png')
-    },
-    {
-        id: 4,
-        name: 'Gaming Headset - Black',
-        price: 139,
-        image: require('@assets/images/headset3.png')
-    },
-]
 
 const ProductDetailsScreen = () => {
-    const { id } = useLocalSearchParams();
+    const { id: idString = '' } = useLocalSearchParams();
 
-    const product = products.find((p) => p.id.toString() === id);
+    const id = parseFloat(Array.isArray(idString) ? idString[0] : idString);
+
+    const { data: product, isLoading, error } = fetchProductsById(id);
 
     const { addItem } = useCart();
     const router = useRouter();
+
 
     const [isFavorite, setIsFavorite] = useState(false);
     const [lastPress, setLastPress] = useState(0);
@@ -74,6 +47,14 @@ const ProductDetailsScreen = () => {
 
     if (!product) {
         return <Text>Product not found</Text>;
+    }
+
+    if (isLoading) {
+        return <ActivityIndicator size="large" color="#000" />;
+    }
+
+    if (error) {
+        return <Text>Error: {error.message}</Text>;
     }
 
     return (

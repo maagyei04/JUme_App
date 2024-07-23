@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Image, Pressable, StyleSheet, ScrollView, FlatList } from 'react-native';
 import { fetchCategories } from '@/api/categories';
+import { fetchProductsByCategory } from '@/api/products';
 
 interface Product {
   name: string;
@@ -26,14 +27,17 @@ const products: { [key: string]: Product[] } = {
 
 export default function CategoryScreen() {
   const { data: categories, isLoading, error } = fetchCategories();
+
+  console.log('p:', categories);
+
   const [selectedCategory, setSelectedCategory] = useState<string>('Grocery');
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.leftContainer}>
         {categories && categories.map(category => (
-          <Pressable key={category} style={[styles.category, selectedCategory === category && styles.selectedCategoryContainer]} onPress={() => setSelectedCategory(category)}>
-            <Text style={[styles.categoryText, selectedCategory === category && styles.selectedCategoryText]}>
+          <Pressable key={category.id} style={[styles.category, selectedCategory === category.name && styles.selectedCategoryContainer]} onPress={() => setSelectedCategory(category.name)}>
+            <Text style={[styles.categoryText, selectedCategory === category.name && styles.selectedCategoryText]}>
               {category.name}
             </Text>
           </Pressable>
@@ -41,17 +45,23 @@ export default function CategoryScreen() {
       </ScrollView>
 
       <ScrollView style={styles.rightContainer}>
-        <FlatList
-          data={products[selectedCategory]}
-          keyExtractor={(item) => item.name}
-          numColumns={3}
-          renderItem={({ item }) => (
-            <View style={styles.product}>
-              <Image source={item.image} style={styles.productImage} />
-              <Text style={styles.productText}>{item.name}</Text>
-            </View>
-          )}
-        />
+        {fetchProductsByCategory(selectedCategory).isLoading ? (
+          <Text>Loading...</Text>
+        ) : fetchProductsByCategory(selectedCategory).error ? (
+          <Text>Error loading products</Text>
+        ) : (
+          <FlatList
+            data={fetchProductsByCategory(selectedCategory).data}
+            keyExtractor={(item) => item.id}
+            numColumns={3}
+            renderItem={({ item }) => (
+              <View style={styles.product}>
+                <Image source={{ uri: item.image }} style={styles.productImage} />
+                <Text style={styles.productText}>{item.name}</Text>
+              </View>
+            )}
+          />
+        )}
       </ScrollView>
     </View>
   );

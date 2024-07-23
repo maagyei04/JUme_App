@@ -1,13 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Platform, StyleSheet, Button, FlatList, Pressable } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useCart } from '@/providers/CartProvider';
+import { useAuth } from '@/providers/AuthProvider';
 import { Link } from 'expo-router';
 import CartListItem from '@/components/CartListItem';
 import { TouchableOpacity } from 'react-native';
+import { router } from 'expo-router';
 
 const CartScreen = () => {
+    const [userLoggedIn, setUserLoggedIn] = useState(false);
+    const { session, profile } = useAuth();
+
+    useEffect(() => {
+        if (session) {
+            setUserLoggedIn(true);
+        } else {
+            setUserLoggedIn(false);
+        }
+    }, [session]);
+
+    console.log(profile);
+
     const { items, total } = useCart();
 
     if (items.length === 0) {
@@ -24,6 +39,10 @@ const CartScreen = () => {
         );
     }
 
+    const handleLoginPress = () => {
+        router.replace('/(auth)/AuthScreen/');
+    };
+
     return (
 
         <View style={{ padding: 10, }}>
@@ -35,9 +54,17 @@ const CartScreen = () => {
 
             <Text style={{ marginTop: 20, fontSize: 20, fontWeight: '500' }}>Total: GHS {total}</Text>
 
-            <TouchableOpacity style={styles.button}>
-                <Text style={styles.text}>Checkout</Text>
-            </TouchableOpacity>
+            {userLoggedIn && (
+                <TouchableOpacity style={styles.button}>
+                    <Text style={styles.text}>Checkout</Text>
+                </TouchableOpacity>
+            )}
+
+            {!userLoggedIn && (
+                <TouchableOpacity style={styles.button} onPress={handleLoginPress}>
+                    <Text style={styles.text}>Login to Checkout</Text>
+                </TouchableOpacity>
+            )}
 
             <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
         </View>

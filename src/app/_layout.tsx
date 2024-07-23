@@ -8,6 +8,7 @@ import 'react-native-reanimated';
 import CartProvider from '@/providers/CartProvider';
 import AuthProvider from '@/providers/AuthProvider';
 import QueryProvider from '@/providers/QueryProvider';
+import { SearchProvider } from '@/providers/SearchProvider';
 
 import { useColorScheme } from '../components/useColorScheme';
 
@@ -56,13 +57,15 @@ function RootLayoutNav() {
       <AuthProvider>
         <QueryProvider>
           <CartProvider>
-            <Stack>
-              <Stack.Screen name="(admin)" options={{ headerShown: false }} />
-              <Stack.Screen name="(seller)" options={{ headerShown: false }} />
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              <Stack.Screen name="cart" options={{ presentation: 'modal' }} />
-            </Stack>
+            <SearchProvider>
+              <Stack>
+                <Stack.Screen name="(admin)" options={{ headerShown: false }} />
+                <Stack.Screen name="(seller)" options={{ headerShown: false }} />
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                <Stack.Screen name="cart" options={{ presentation: 'modal' }} />
+              </Stack>
+            </SearchProvider>
           </CartProvider>
         </QueryProvider>
       </AuthProvider>
