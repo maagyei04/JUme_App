@@ -16,8 +16,10 @@ const ProductDetailsScreen = () => {
 
     const { data: product, isLoading, error } = fetchProductsById(id);
 
-    const { addItem } = useCart();
+    const { addItem, items } = useCart();
     const router = useRouter();
+
+    const itemCount = items.length;
 
 
     const [isFavorite, setIsFavorite] = useState(false);
@@ -66,13 +68,18 @@ const ProductDetailsScreen = () => {
                         <Link href="/cart" asChild>
                             <Pressable style={styles.cartIcon}>
                                 <AntDesign name="shoppingcart" size={25} style={styles.icon} />
+                                {itemCount > 0 && (
+                                    <View style={styles.badge}>
+                                        <Text style={styles.badgeText}>{itemCount}</Text>
+                                    </View>
+                                )}
                             </Pressable>
                         </Link>
                     )
                 }} />
 
                 <Image
-                    source={product?.image}
+                    source={{ uri: typeof product.image === 'string' ? product.image : 'product?.image' }}
                     style={styles.productImage}
                 />
 
@@ -168,6 +175,22 @@ const ProductDetailsScreen = () => {
 export default ProductDetailsScreen;
 
 const styles = StyleSheet.create({
+    badge: {
+        position: 'absolute',
+        right: -6,
+        top: -3,
+        backgroundColor: 'black',
+        borderRadius: 9,
+        width: 18,
+        height: 18,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    badgeText: {
+        color: 'white',
+        fontSize: 12,
+        fontWeight: 'bold',
+    },
     container: {
         flex: 1,
         backgroundColor: '#fff',

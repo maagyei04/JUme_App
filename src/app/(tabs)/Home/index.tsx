@@ -74,7 +74,7 @@ const ProductListItem = ({ product, onAddToCart }: ProductListItemProps) => {
     <Link href={`/${product.id}`} asChild>
       <TouchableOpacity style={styles.product} onPressIn={handleDoubleTap}>
         <View style={styles.imageContainer}>
-          <Image source={product.image} style={styles.productImage} />
+          <Image source={{ uri: typeof product.image === 'string' ? product.image : 'product?.image' }} style={styles.productImage} resizeMode="contain" />
           <TouchableOpacity style={styles.favouriteButton} onPress={handleFavoriteToggle}>
             <AntDesign name={isFavorite ? "heart" : "hearto"} size={20} color={isFavorite ? '#FF007F' : '#A146E2'} />
           </TouchableOpacity>
@@ -163,7 +163,6 @@ export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const { debouncedSearchTerm } = useSearch();
 
-  // Move this hook call outside of any conditional rendering
   const { data: searchResults, isLoading: searchLoading, error: searchError } = fetchProductsBySearchTerm(debouncedSearchTerm);
 
   const targetDate = useMemo(() => new Date('2024-07-31T23:59:59'), []);
@@ -450,9 +449,9 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   productImage: {
+    width: '100%',
+    height: 150,
     alignSelf: 'center',
-    width: 100,
-    height: 100,
   },
   productText: {
     marginTop: 5,

@@ -17,7 +17,7 @@ const CartListItem = ({ cartItem }: CartListItemProps) => {
     return (
         <View style={styles.container}>
             <Image
-                source={cartItem.product.image}
+                source={{ uri: typeof cartItem.product.image === 'string' ? cartItem.product.image : 'product?.image' }}
                 style={styles.image}
                 resizeMode="contain"
             />

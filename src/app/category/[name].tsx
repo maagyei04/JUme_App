@@ -36,7 +36,7 @@ const ProductListItem = ({ product, onAddToCart }: ProductListItemProps) => {
         <Link href={`/${product.id}`} asChild>
             <TouchableOpacity style={styles.product} onPressIn={handleDoubleTap}>
                 <View style={styles.imageContainer}>
-                    <Image source={product.image} style={styles.productImage} />
+                    <Image source={{ uri: typeof product.image === 'string' ? product.image : 'product?.image' }} style={styles.productImage} />
                     <TouchableOpacity style={styles.favouriteButton} onPress={handleFavoriteToggle}>
                         <AntDesign name={isFavorite ? "heart" : "hearto"} size={20} color={isFavorite ? '#FF007F' : '#A146E2'} />
                     </TouchableOpacity>
@@ -58,8 +58,11 @@ const CategoryDetailsScreen = () => {
 
     const { data: product, isLoading, error, refetch } = fetchProductsBySearchTerm(name);
 
-    const { addItem } = useCart();
+    const { addItem, items } = useCart();
     const router = useRouter();
+
+    const itemCount = items.length;
+
 
     const addToCart = (product: Product) => {
         if (!product) {
@@ -98,6 +101,11 @@ const CategoryDetailsScreen = () => {
                         <Link href="/cart" asChild>
                             <Pressable style={styles.cartIcon}>
                                 <AntDesign name="shoppingcart" size={25} style={styles.icon} />
+                                {itemCount > 0 && (
+                                    <View style={styles.badge}>
+                                        <Text style={styles.badgeText}>{itemCount}</Text>
+                                    </View>
+                                )}
                             </Pressable>
                         </Link>
                     )
@@ -120,6 +128,22 @@ const CategoryDetailsScreen = () => {
 export default CategoryDetailsScreen;
 
 const styles = StyleSheet.create({
+    badge: {
+        position: 'absolute',
+        right: -6,
+        top: -3,
+        backgroundColor: 'black',
+        borderRadius: 9,
+        width: 18,
+        height: 18,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    badgeText: {
+        color: 'white',
+        fontSize: 12,
+        fontWeight: 'bold',
+    },
     container: {
         flex: 1,
         backgroundColor: '#F8F8F8',
