@@ -7,6 +7,8 @@ import { AntDesign } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { fetchProducts, fetchProductsBySearchTerm } from '@/api/products';
 import { useSearch } from '@/providers/SearchProvider';
+import LottieView from 'lottie-react-native';
+
 
 type ProductListItemProps = {
   product: Product;
@@ -285,9 +287,15 @@ export default function HomeScreen() {
       ) : (
         <View style={styles.searchResultsContainer}>
           {searchLoading ? (
-            <ActivityIndicator size="large" color="#0000ff" />
-          ) : searchError ? (
-            <Text>Error: {searchError.message}</Text>
+            <LottieView style={{ height: 400, width: 400 }}
+              source={require('@assets/animations/loading.json')}
+              autoPlay
+              loop
+            />
+          ) : searchError || searchResults?.length === 0 ? (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={styles.searchResultsText}>No products found</Text>
+            </View>
           ) : (
             <>
               <Text style={styles.searchResultsText}>Search Results</Text>

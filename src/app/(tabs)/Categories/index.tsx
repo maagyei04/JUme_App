@@ -8,23 +8,6 @@ interface Product {
   image: any;
 }
 
-const categories = [
-  'Grocery', 'Health & Beauty', 'Home & Office', 'Phones & Tablets', 'Computing',
-  'Electronics', 'Fashion', 'Gaming', 'Baby Product', 'Sporting Goods', 'Books',
-  'Toys & Games', 'Miscellaneous'
-];
-
-const products: { [key: string]: Product[] } = {
-  'Grocery': [
-    { name: 'Tomato paste', image: require('@assets/images/watch.png') },
-    { name: 'Safari puffs', image: require('@assets/images/watch.png') },
-  ],
-  'Health & Beauty': [
-    { name: 'Product 1', image: require('@assets/images/watch.png') },
-    { name: 'Product 2', image: require('@assets/images/watch.png') },
-  ],
-};
-
 export default function CategoryScreen() {
   const { data: categories, isLoading, error } = fetchCategories();
 

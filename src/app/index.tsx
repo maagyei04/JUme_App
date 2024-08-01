@@ -3,25 +3,17 @@ import { Redirect } from "expo-router";
 import { ActivityIndicator } from "react-native";
 
 const index = () => {
-    const { session, loading, isAdmin, isSeller } = useAuth();
+    const { session, loading } = useAuth();
 
     if (loading) {
         return <ActivityIndicator />;
     }
 
     if (!session) {
-        return <Redirect href={'/AuthScreen'} />;
+        return <Redirect href={'/(auth)/GetStarted/'} />;
     }
 
     if (session) {
-        return <Redirect href={'/(tabs)/Profile/'} />;
-    }
-
-    if (!isAdmin) {
-        return <Redirect href={'/(tabs)/Profile/'} />;
-    }
-
-    if (!isSeller) {
         return <Redirect href={'/(tabs)/Profile/'} />;
     }
 }

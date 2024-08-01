@@ -8,6 +8,7 @@ import { Link } from 'expo-router';
 import CartListItem from '@/components/CartListItem';
 import { TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
+import LottieView from 'lottie-react-native';
 
 const CartScreen = () => {
     const [userLoggedIn, setUserLoggedIn] = useState(false);
@@ -28,7 +29,11 @@ const CartScreen = () => {
     if (items.length === 0) {
         return (
             <View style={styles.emptyContainer}>
-                <FontAwesome name='shopping-cart' size={80} color="#888" />
+                <LottieView style={{ height: 200, width: 200 }}
+                    source={require('../../assets/animations/emptycart.json')}
+                    autoPlay
+                    loop
+                />
                 <Text style={styles.emptyText}>Your cart is empty!</Text>
                 <Text style={styles.suggestionText}>Browse our categories and discover our best deals!</Text>
                 <Link href="/(tabs)/Home/" style={styles.link}>
@@ -55,9 +60,11 @@ const CartScreen = () => {
             <Text style={{ marginTop: 20, fontSize: 20, fontWeight: '500' }}>Total: GHS {total}</Text>
 
             {userLoggedIn && (
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.text}>Checkout</Text>
-                </TouchableOpacity>
+                <Link href="/checkout/address" asChild>
+                    <TouchableOpacity style={styles.button}>
+                        <Text style={styles.text}>Checkout</Text>
+                    </TouchableOpacity>
+                </Link>
             )}
 
             {!userLoggedIn && (

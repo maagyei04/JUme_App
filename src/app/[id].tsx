@@ -5,9 +5,9 @@ import { AntDesign, FontAwesome, FontAwesome5, MaterialCommunityIcons, Ionicons 
 import { Product } from '@/types';
 import { useCart } from '@/providers/CartProvider';
 import { fetchProductsById } from '@/api/products';
+import LottieView from 'lottie-react-native';
 
 const { width, height } = Dimensions.get('window');
-
 
 const ProductDetailsScreen = () => {
     const { id: idString = '' } = useLocalSearchParams();
@@ -48,15 +48,32 @@ const ProductDetailsScreen = () => {
     };
 
     if (!product) {
-        return <Text>Product not found</Text>;
+        return (
+            <View style={styles.noProductContainer}>
+                <LottieView
+                    source={require('../../assets/animations/productnotfound.json')}
+                    autoPlay
+                    loop
+                />
+                <Text style={styles.noProductText}>Product not found</Text>
+            </View>
+        );
     }
 
     if (isLoading) {
-        return <ActivityIndicator size="large" color="#000" />;
+        return (
+            <View style={styles.noProductContainer}>
+                <ActivityIndicator size="large" color="#000" />
+            </View>
+        );
     }
 
     if (error) {
-        return <Text>Error: {error.message}</Text>;
+        return (
+            <View style={styles.noProductContainer}>
+                <Text style={styles.noProductText}>Error: {error.message}</Text>
+            </View>
+        );
     }
 
     return (
@@ -335,5 +352,19 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 16,
         marginRight: 8,
+    },
+    noProductContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    riveAnimation: {
+        width: 200,
+        height: 200,
+    },
+    noProductText: {
+        marginTop: 20,
+        fontSize: 18,
+        fontWeight: 'bold',
     },
 });

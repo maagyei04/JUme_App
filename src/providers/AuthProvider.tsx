@@ -7,21 +7,22 @@ type AuthData = {
     session: Session | null;
     profile: any;
     loading: boolean;
-    isSeller: boolean;
-    isAdmin: boolean;
 }
 
 const AuthContext = createContext<AuthData>({
     session: null,
     profile: null,
     loading: true,
-    isSeller: false,
-    isAdmin: false,
 });
+
+type Profile = {
+    id: string;
+    username: string;
+};
 
 export default function AuthProvider({ children }: PropsWithChildren) {
     const [session, setSession] = useState<Session | null>(null);
-    const [profile, setProfile] = useState(null);
+    const [profile, setProfile] = useState<Profile | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -38,7 +39,12 @@ export default function AuthProvider({ children }: PropsWithChildren) {
                     .select('*')
                     .eq('id', session.user.id)
                     .single();
-                setProfile(data || null);
+
+                const userData: Profile = {
+                    id: data?.id,
+                    username: data?.username,
+                };
+                setProfile(userData);
             }
 
             setLoading(false);
@@ -53,7 +59,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ session, loading, profile, isAdmin: profile?.user_type === 'ADMIN', isSeller: profile?.user_type === 'SELLER' }}>
+        <AuthContext.Provider value={{ session, loading, profile }}>
             {children}
         </AuthContext.Provider>
     )

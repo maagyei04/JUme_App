@@ -15,9 +15,7 @@ export default function ProfileScreen() {
     } else {
       setUserLoggedIn(false);
     }
-  }, [session]);
-
-  console.log(profile);
+  }, [session, profile]);
 
   return (
     <ScrollView style={styles.container}>
@@ -25,8 +23,8 @@ export default function ProfileScreen() {
       {/* Welcome Section */}
       {userLoggedIn &&
         <View style={styles.welcomeSection}>
-          <Text style={styles.welcomeText}>Welcome !</Text>
-          <Text style={styles.emailText}>{profile?.username} ...</Text>
+          <Text style={styles.welcomeText}>Welcome Back!</Text>
+          <Text style={styles.emailText}>{profile?.username}</Text>
         </View>
       }
 
@@ -82,7 +80,7 @@ export default function ProfileScreen() {
 
       {/* Logout Button */}
       {userLoggedIn &&
-        <Pressable onPress={() => supabase.auth.signOut().then(() => router.push('/(auth)/AuthScreen/'))} style={styles.logoutButton}>
+        <Pressable onPress={() => supabase.auth.signOut().then(() => router.push('/(auth)/GetStarted/'))} style={styles.logoutButton}>
           <Text style={styles.logoutText}>LOGOUT</Text>
         </Pressable>
       }
@@ -151,6 +149,8 @@ const styles = StyleSheet.create({
   },
   emailText: {
     color: '#000',
+    fontSize: 19,
+    fontWeight: 'bold',
   },
   sectionTitle: {
     marginTop: 20,

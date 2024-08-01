@@ -3,23 +3,49 @@ import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { useState } from "react";
 import { TextInput, View, Text, Pressable, StyleSheet, Alert } from "react-native";
+import { sendSMS } from "@/api/sms";
+import { AuthApiError } from '@supabase/supabase-js';
+import { upsertProfile } from "@/api/auth";
 
 const SignUp = () => {
     const [hidden, setHidden] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [loading, setLoading] = useState(false);
 
     async function signUpWithEmail() {
         setLoading(true);
-        const { error } = await supabase.auth.signUp({
-            email: email,
-            password: password,
-        });
+        try {
+            const { error: signUpError, data: { user } } = await supabase.auth.signUp({
+                email: email,
+                password: password,
+                phone: phoneNumber,
+            });
 
-        if (error) Alert.alert(error.message);
-        setLoading(false);
+            if (signUpError) throw signUpError;
+
+            if (!user) throw new Error('User not created');
+
+            await upsertProfile(user.id, username, email, phoneNumber);
+
+            await sendSMS(username, phoneNumber);
+            Alert.alert('Success', 'Account created successfully');
+        } catch (error) {
+            if (error instanceof AuthApiError && error.status === 500) {
+                console.error('Supabase AuthApiError:', error.message, error.status);
+                Alert.alert('Sign-up Error', 'There was an issue creating your account on our server. Please try again later.');
+            } else if (error instanceof AuthApiError) {
+                console.error('Supabase AuthApiError:', error.message, error.status);
+                Alert.alert('Sign-up Error', 'There was an issue creating your account. Please try again later.');
+            } else {
+                console.error('Unexpected error during sign-up:', error);
+                Alert.alert('Error', 'An unexpected error occurred. Please try again.');
+            }
+        } finally {
+            setLoading(false);
+        }
     }
 
     const showPassword = () => {
@@ -38,6 +64,13 @@ const SignUp = () => {
                 value={username}
                 onChangeText={setUsername}
                 placeholder="Username"
+                style={styles.input}
+            />
+
+            <TextInput
+                value={phoneNumber}
+                onChangeText={setPhoneNumber}
+                placeholder="+233541190955"
                 style={styles.input}
             />
 

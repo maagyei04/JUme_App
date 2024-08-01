@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity, Image, Platform, Text, Alert } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import { useSearch } from '@/providers/SearchProvider';
 import { useCart } from '@/providers/CartProvider';
 import * as ImagePicker from 'expo-image-picker';
@@ -81,6 +81,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ onFocus, onBlur, onChangeText }) 
         }
     };
 
+    const handleVoiceInput = () => {
+        // Implement voice input functionality here
+        console.log('Voice input activated');
+    };
+
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={onSubmit} style={styles.searchButton}>
@@ -96,7 +101,10 @@ const SearchBar: React.FC<SearchBarProps> = ({ onFocus, onBlur, onChangeText }) 
                 onFocus={onFocus}
                 onBlur={onBlur}
             />
-            <TouchableOpacity style={styles.imageButton} onPress={handleImagePick}>
+            <TouchableOpacity style={styles.iconButton} onPress={handleVoiceInput}>
+                <FontAwesome name="microphone" size={24} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iconButton} onPress={handleImagePick}>
                 <AntDesign name="camera" size={24} color="black" />
             </TouchableOpacity>
         </View>
@@ -120,9 +128,10 @@ const styles = StyleSheet.create({
     searchButton: {
         padding: 10,
     },
-    imageButton: {
+    iconButton: {
         padding: 10,
     },
 });
+
 
 export default SearchBar;

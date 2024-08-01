@@ -1,5 +1,10 @@
 import { ImageSourcePropType } from "react-native";
 
+export type Profile = {
+    id: string;
+    username: string;
+};
+
 export type Product = {
     id: number;
     name: string;
@@ -49,4 +54,17 @@ export type OrderItem = {
     order_id: number;
     size: ProductSize;
     quantity: number;
+}
+
+export type Address = {
+    user_id: string;
+    first_name: string;
+    last_name: string;
+    phone_number: string;
+    phone_number_2: string;
+    address: string;
+    additional_info: string;
+    region: string;
+    city: string;
+    country: string;
 }
