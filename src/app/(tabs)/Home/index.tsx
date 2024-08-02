@@ -82,7 +82,7 @@ const ProductListItem = ({ product, onAddToCart }: ProductListItemProps) => {
           </TouchableOpacity>
         </View>
         <Text style={styles.productText}>{product.name}</Text>
-        <Text style={styles.productPrice}>GHS {product.price}.00</Text>
+        <Text style={styles.productPrice}>GH¢ {product.price}.00</Text>
         <TouchableOpacity style={styles.liveChatButton} onPress={() => onAddToCart(product)}>
           <Text style={styles.flashSalesText}>Add To Cart</Text>
         </TouchableOpacity>
@@ -167,7 +167,7 @@ export default function HomeScreen() {
 
   const { data: searchResults, isLoading: searchLoading, error: searchError } = fetchProductsBySearchTerm(debouncedSearchTerm);
 
-  const targetDate = useMemo(() => new Date('2024-07-31T23:59:59'), []);
+  const targetDate = useMemo(() => new Date('2024-08-05T23:59:59'), []);
   const timeLeft = useCountdown(targetDate);
 
   console.log('p:', products);
@@ -405,7 +405,7 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   flashSales: {
-    backgroundColor: '#FF007F',
+    backgroundColor: '#A146E2',
     padding: 10,
     borderRadius: 10,
     marginHorizontal: 10,
@@ -428,7 +428,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   seeAllText2: {
-    color: '#A146E2',
+    color: '#81008F',
     fontWeight: 'bold',
   },
   latestProducts: {
@@ -473,9 +473,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   liveChatButton: {
-    backgroundColor: '#A146E2',
+    backgroundColor: '#81008F',
     padding: 12,
-    borderRadius: 10,
+    borderRadius: 8,
     alignItems: 'center',
     marginTop: 5,
   },
@@ -487,7 +487,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 5,
     right: 5,
-    backgroundColor: '#ffffff'
+    backgroundColor: '#FFFFFF00'
   },
   searchResultsContainer: {
     flex: 1,

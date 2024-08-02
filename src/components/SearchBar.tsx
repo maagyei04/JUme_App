@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity, Image, Platform, Text, Alert } from 'react-native';
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import { useSearch } from '@/providers/SearchProvider';
 import { useCart } from '@/providers/CartProvider';
 import * as ImagePicker from 'expo-image-picker';
+import * as Speech from 'expo-speech';
+import * as SpeechRecognition from 'expo-speech-recognition';
 
 interface SearchBarProps {
     onFocus?: () => void;
@@ -13,6 +15,30 @@ interface SearchBarProps {
 
 const SearchBar: React.FC<SearchBarProps> = ({ onFocus, onBlur, onChangeText }) => {
     const { searchTerm, setSearchTerm } = useSearch();
+    const [isListening, setIsListening] = useState(false);
+
+
+    const handleVoiceInput = async () => {
+        try {
+            if (isListening) {
+                await SpeechRecognition.stopListeningAsync();
+                setIsListening(false);
+            } else {
+                setIsListening(true);
+                await Speech.speak('Welcome to Jume, What would you like to search for?', {
+                    language: 'en',
+
+                });
+            }
+        } catch (error) {
+            console.error('Error in voice input:', error);
+            setIsListening(false);
+        }
+    };
+
+
+
+
 
     const onSubmit = () => {
         onChangeText(searchTerm);
@@ -81,11 +107,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ onFocus, onBlur, onChangeText }) 
         }
     };
 
-    const handleVoiceInput = () => {
-        // Implement voice input functionality here
-        console.log('Voice input activated');
-    };
-
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={onSubmit} style={styles.searchButton}>
@@ -102,7 +123,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onFocus, onBlur, onChangeText }) 
                 onBlur={onBlur}
             />
             <TouchableOpacity style={styles.iconButton} onPress={handleVoiceInput}>
-                <FontAwesome name="microphone" size={24} color="black" />
+                <FontAwesome name={isListening ? "stop-circle" : "microphone"} size={24} color="black" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.iconButton} onPress={handleImagePick}>
                 <AntDesign name="camera" size={24} color="black" />

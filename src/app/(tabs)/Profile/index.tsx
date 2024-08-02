@@ -25,6 +25,7 @@ export default function ProfileScreen() {
         <View style={styles.welcomeSection}>
           <Text style={styles.welcomeText}>Welcome Back!</Text>
           <Text style={styles.emailText}>{profile?.username}</Text>
+          <Text style={styles.emailText2}>{profile?.email}</Text>
         </View>
       }
 
@@ -113,11 +114,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   welcomeSection: {
-    backgroundColor: '#E0C3F7',
+    backgroundColor: '#81008F',
     padding: 20,
   },
   welcomeSection2: {
-    backgroundColor: '#A146E2',
+    backgroundColor: '#81008F',
     padding: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -140,17 +141,21 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     fontWeight: 'bold',
-    color: '#A146E2',
+    color: '#81008F',
   },
   welcomeText: {
-    color: '#FF007F',
+    color: '#FFFFFF',
     fontSize: 18,
     fontWeight: 'bold',
   },
   emailText: {
-    color: '#000',
+    color: 'white',
     fontSize: 19,
     fontWeight: 'bold',
+  },
+  emailText2: {
+    color: 'white',
+    fontSize: 16,
   },
   sectionTitle: {
     marginTop: 20,
@@ -208,7 +213,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logoutText: {
-    color: '#FF007F',
+    color: '#81008F',
     fontSize: 16,
     fontWeight: 'bold',
   },

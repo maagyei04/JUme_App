@@ -7,6 +7,7 @@ type CartType = {
     addItem: (product: Product, size: CartItem['size']) => void;
     updateQuantity: (itemId: string, amount: -1 | 1) => void;
     total: number;
+    resetCart: () => void;
 }
 
 const CartContext = createContext<CartType>({
@@ -14,6 +15,7 @@ const CartContext = createContext<CartType>({
     addItem: () => { },
     updateQuantity: () => { },
     total: 0,
+    resetCart: () => { },
 })
 
 const CartProvider = ({ children }: PropsWithChildren) => {
@@ -57,8 +59,12 @@ const CartProvider = ({ children }: PropsWithChildren) => {
         (sum, item) => (sum += item.product.price * item.quantity), 0
     );
 
+    const resetCart = () => {
+        setItems([]);
+    }
+
     return (
-        <CartContext.Provider value={{ items, addItem, updateQuantity, total }}>
+        <CartContext.Provider value={{ items, addItem, updateQuantity, total, resetCart }}>
             {children}
         </CartContext.Provider>
     )

@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     color: '#A0A0A0',
   },
   liveChatButton: {
-    backgroundColor: '#FF007F',
+    backgroundColor: '#81008F',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',

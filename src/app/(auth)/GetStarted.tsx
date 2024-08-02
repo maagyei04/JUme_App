@@ -51,8 +51,8 @@ const GetStarted = () => {
 
     const bgColorAnimatedStyle = {
         backgroundColor: bgColorAnimation.interpolate({
-            inputRange: [0, 1, 2],
-            outputRange: ['purple', 'hotpink', 'blue'],
+            inputRange: [0, 1],
+            outputRange: ['#BA00CF', '#81008F'],
         }),
     };
 
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
         height: 200,
         borderRadius: 100,
         margin: 10,
-        backgroundColor: 'hotpink',
+        backgroundColor: '#BA00CE',
     },
     smallImage: {
         width: 60,
@@ -150,12 +150,14 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     button: {
-        backgroundColor: '#FF007A',
-        paddingVertical: 15,
-        paddingHorizontal: 90,
-        borderRadius: 30,
+        backgroundColor: '#81008F',
+        paddingVertical: 20,
+        paddingHorizontal: 120,
+        borderRadius: 8,
         marginBottom: 20,
         marginTop: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     buttonText: {
         color: '#fff',

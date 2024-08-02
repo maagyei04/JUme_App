@@ -11,18 +11,6 @@ const FeedScreen = () => {
       time: '6 hours ago',
       images: [require('@assets/images/watch.png'), require('@assets/images/watch.png'), require('@assets/images/watch.png')]
     },
-    {
-      id: 2,
-      seller: 'Kaylo Technologies',
-      time: '1 day ago',
-      images: [require('@assets/images/watch.png'), require('@assets/images/watch.png'), require('@assets/images/watch.png')]
-    },
-    {
-      id: 3,
-      seller: 'Kaylo Technologies',
-      time: '2 days ago',
-      images: [require('@assets/images/watch.png'), require('@assets/images/watch.png'), require('@assets/images/watch.png')]
-    }
   ];
 
   return (
@@ -42,23 +30,7 @@ const FeedScreen = () => {
       {selectedTab === 'Following' && (
         feedItems.map(item => (
           <View key={item.id} style={styles.feedItem}>
-            <View style={styles.feedHeader}>
-              <Text style={styles.sellerBadge}>POPULAR SELLERS</Text>
-              <Text style={styles.sellerName}>{item.seller}</Text>
-              <Pressable style={styles.followButton}>
-                <Text style={styles.followText}>Follow</Text>
-              </Pressable>
-            </View>
-            <View style={styles.feedImages}>
-              {item.images.map((image, index) => (
-                <Image key={index} source={image} style={styles.feedImage} />
-              ))}
-            </View>
-            <Text style={styles.feedDescription}>Check the latest arrivals</Text>
-            <Text style={styles.feedTime}>{item.time}</Text>
-            <Pressable style={styles.shareButton}>
-              <Text style={styles.shareText}>SHARE</Text>
-            </Pressable>
+            <Text>No current stores</Text>
           </View>
         ))
       )}
@@ -114,7 +86,7 @@ const styles = StyleSheet.create({
   },
   tabTextActive: {
     fontSize: 16,
-    color: '#FF007F',
+    color: '#81008F',
     fontWeight: 'bold',
   },
   feedItem: {

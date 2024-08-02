@@ -57,14 +57,12 @@ const CartScreen = () => {
                 contentContainerStyle={{ gap: 10 }}
             />
 
-            <Text style={{ marginTop: 20, fontSize: 20, fontWeight: '500' }}>Total: GHS {total}</Text>
+            <Text style={{ marginTop: 20, fontSize: 20, fontWeight: '500' }}>Total: GH¢ {total}</Text>
 
             {userLoggedIn && (
-                <Link href="/checkout/address" asChild>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.text}>Checkout</Text>
-                    </TouchableOpacity>
-                </Link>
+                <TouchableOpacity onPress={() => router.replace("/checkout/address")} style={styles.button}>
+                    <Text style={styles.text}>Checkout</Text>
+                </TouchableOpacity>
             )}
 
             {!userLoggedIn && (
@@ -124,9 +122,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     button: {
-        backgroundColor: '#A146E2',
+        backgroundColor: '#81008F',
         padding: 15,
-        borderRadius: 10,
+        borderRadius: 8,
         alignItems: 'center',
         marginTop: 10,
     }

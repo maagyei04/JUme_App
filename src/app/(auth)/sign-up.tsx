@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         borderBottomWidth: 1,
         borderBottomColor: '#DDD',
-        marginVertical: 10,
+        marginVertical: 7,
     },
     tab: {
         paddingVertical: 10,
@@ -170,11 +170,14 @@ const styles = StyleSheet.create({
         color: '#A146E2',
     },
     button: {
-        backgroundColor: '#FF007F',
-        padding: 15,
-        borderRadius: 5,
-        alignItems: 'center',
+        backgroundColor: '#81008F',
+        paddingVertical: 20,
+        paddingHorizontal: 10,
+        borderRadius: 8,
         marginBottom: 20,
+        marginTop: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     buttonText: {
         color: '#fff',

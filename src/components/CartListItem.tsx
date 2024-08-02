@@ -24,7 +24,7 @@ const CartListItem = ({ cartItem }: CartListItemProps) => {
             <View style={{ flex: 1 }}>
                 <Text style={styles.title}>{cartItem.product.name}</Text>
                 <View style={styles.subtitleContainer}>
-                    <Text style={styles.price}>GHS {cartItem.product.price}</Text>
+                    <Text style={styles.price}>GH¢ {cartItem.product.price}</Text>
                     <Text>Size: {cartItem.size}</Text>
                 </View>
             </View>

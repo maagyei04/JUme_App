@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#A146E2',
+        backgroundColor: '#81008F',
         height: '100%',
     },
     addToCartButtonText: {

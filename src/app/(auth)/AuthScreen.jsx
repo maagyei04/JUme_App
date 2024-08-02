@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#F8F8F8',
-        padding: 10,
+        padding: 5,
     },
     tabs: {
         flexDirection: 'row',
@@ -42,12 +42,12 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
     },
     tabText: {
-        fontSize: 16,
+        fontSize: 18,
         color: '#888',
     },
     tabTextActive: {
-        fontSize: 16,
-        color: '#FF007F',
+        fontSize: 18,
+        color: '#81008F',
         fontWeight: 'bold',
     },
     title: {

@@ -42,7 +42,7 @@ const ProductListItem = ({ product, onAddToCart }: ProductListItemProps) => {
                     </TouchableOpacity>
                 </View>
                 <Text style={styles.productText}>{product.name}</Text>
-                <Text style={styles.productPrice}>GHS {product.price}.00</Text>
+                <Text style={styles.productPrice}>GH¢ {product.price}.00</Text>
                 <TouchableOpacity style={styles.liveChatButton} onPress={() => onAddToCart(product)}>
                     <Text style={styles.flashSalesText}>Add To Cart</Text>
                 </TouchableOpacity>
@@ -302,9 +302,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     liveChatButton: {
-        backgroundColor: '#A146E2',
+        backgroundColor: '#81008F',
         padding: 12,
-        borderRadius: 10,
+        borderRadius: 8,
         alignItems: 'center',
         marginTop: 5,
     },
