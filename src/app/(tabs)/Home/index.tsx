@@ -115,14 +115,8 @@ const Banner = ({ index, banners }: BannerProps) => (
     start={{ x: 0, y: 0 }}
     end={{ x: 1, y: 1 }}
   >
-    <View style={{ flexDirection: 'row', height: 110 }}>
-      <View>
-        <Text style={styles.bannerText}>50% off in Apple Watch</Text>
-        <TouchableOpacity style={styles.shopNowButton}>
-          <Text style={styles.shopNowText}>Shop Now !</Text>
-        </TouchableOpacity>
-      </View>
-      <Image source={banners[index].image} style={styles.bannerImage} />
+    <View style={{ height: 140, width: 300 }}>
+      <Image source={banners[index].image} style={{ width: '100%', height: '100%' }} />
     </View>
   </LinearGradient>
 );
@@ -172,12 +166,16 @@ export default function HomeScreen() {
 
   console.log('p:', products);
 
+  const handlePress = () => {
+    router.push(`/category/${encodeURIComponent('flash_sales')}`);
+  };
+
   const banners = [
-    { image: require('@assets/images/watch.png') },
-    { image: require('@assets/images/headset.png') },
-    { image: require('@assets/images/shirts.png') },
-    { image: require('@assets/images/laptop.png') },
-    { image: require('@assets/images/headset2.png') },
+    { image: require('@assets/images/banner1.jpeg') },
+    { image: require('@assets/images/banner2.jpeg') },
+    { image: require('@assets/images/banner3.jpeg') },
+    { image: require('@assets/images/banner4.jpeg') },
+    { image: require('@assets/images/banner5.jpeg') },
   ];
 
   const addToCart = (product: Product) => {
@@ -233,9 +231,14 @@ export default function HomeScreen() {
       {debouncedSearchTerm === '' ? (
         <>
           {/* Banner */}
-          <ScrollView horizontal pagingEnabled ref={bannerScrollRef} showsHorizontalScrollIndicator={false}>
-            {banners.map((banner, index) => (
-              <Banner key={index} index={bannerIndex} banners={banners} />
+          <ScrollView
+            horizontal
+            pagingEnabled
+            ref={bannerScrollRef}
+            showsHorizontalScrollIndicator={false}
+          >
+            {banners.map((_, index) => (
+              <Banner key={index} index={index} banners={banners} />
             ))}
           </ScrollView>
 
@@ -250,7 +253,7 @@ export default function HomeScreen() {
           </ScrollView>
 
           {/* Flash Sales */}
-          <View style={styles.flashSales}>
+          <TouchableOpacity style={styles.flashSales} onPress={handlePress}>
             <Text style={styles.flashSalesText}>FLASH SALES</Text>
             <Text style={styles.flashSalesTimer}>
               TIME LEFT: {String(timeLeft.days).padStart(2, '0')}d :
@@ -261,7 +264,7 @@ export default function HomeScreen() {
             <Pressable style={styles.seeAllButton}>
               <Text style={styles.seeAllText}>SEE ALL</Text>
             </Pressable>
-          </View>
+          </TouchableOpacity>
 
           {/* Latest Products */}
           <View style={styles.latestProducts}>
@@ -343,12 +346,8 @@ const styles = StyleSheet.create({
     height: 24,
   },
   banner: {
-    width: 300,
-    padding: 20,
     borderRadius: 10,
     margin: 5,
-    alignItems: 'center',
-    flexDirection: 'row',
     shadowColor: '#fffffff',
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 2,
@@ -372,9 +371,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   bannerImage: {
-    width: 120,
-    height: 120,
-    marginTop: 10,
+
   },
   categories: {
     flexDirection: 'row',

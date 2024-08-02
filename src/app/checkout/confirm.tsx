@@ -61,8 +61,8 @@ const ConfirmScreen = () => {
             </View>
             <View style={styles.orderSummary}>
                 <Text style={styles.subHeader}>ADDRESS</Text>
-                <Text style={styles.address}>{address?.first_name} Agyei</Text>
-                <Text style={styles.address}>Ayeduase, Amen Hostel Annex</Text>
+                <Text style={styles.address}>{address?.first_name} {address?.last_name}</Text>
+                <Text style={styles.address}>{address?.address}</Text>
             </View>
             <View style={styles.orderSummary}>
                 <Text style={styles.subHeader}>DELIVERY METHOD</Text>

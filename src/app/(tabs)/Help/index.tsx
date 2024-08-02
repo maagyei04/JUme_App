@@ -1,19 +1,37 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, Pressable, ScrollView, Switch } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { View, Text, StyleSheet, Image, Pressable, ScrollView, Switch, Linking, TouchableOpacity } from 'react-native';
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
 
 export default function HelpScreen() {
   const [isPushNotificationsEnabled, setIsPushNotificationsEnabled] = React.useState(false);
 
   const toggleSwitch = () => setIsPushNotificationsEnabled(previousState => !previousState);
 
+  const openWhatsApp = async () => {
+    try {
+      const whatsAppNumber = '+233541190955';
+      const whatsAppUrl = `whatsapp://send?phone=${whatsAppNumber}`;
+
+      const isWhatsAppInstalled = await Linking.canOpenURL(whatsAppUrl);
+      if (isWhatsAppInstalled) {
+        await Linking.openURL(whatsAppUrl);
+      } else {
+        const webUrl = `https://wa.me/${whatsAppNumber}`;
+        await Linking.openURL(webUrl);
+      }
+    } catch (error) {
+      console.error('Error opening WhatsApp:', error);
+    }
+  };
+
   return (
     <ScrollView style={styles.container}>
 
       {/* Live Chat Button */}
-      <Pressable style={styles.liveChatButton}>
+      <TouchableOpacity style={styles.liveChatButton} onPress={openWhatsApp}>
         <Text style={styles.liveChatText}>Start Live Chat</Text>
-      </Pressable>
+        <FontAwesome name="whatsapp" size={24} color="white" />
+      </TouchableOpacity>
 
       {/* About Jume Section */}
       <Text style={styles.sectionTitle}>ABOUT JUME</Text>
@@ -99,11 +117,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     margin: 20,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center'
   },
   liveChatText: {
     color: '#FFF',
     fontSize: 16,
     fontWeight: 'bold',
+    marginRight: 10
   },
   sectionTitle: {
     marginTop: 20,

@@ -47,16 +47,14 @@ export default function ProfileScreen() {
       <Text style={styles.sectionTitle}>JUme ACCOUNT</Text>
       <View style={styles.accountSection}>
         {[
-          { label: 'Orders', icon: "isv" },
-          { label: 'Inbox', icon: "inbox" },
-          { label: 'Rating & Reviews', icon: "like2" },
-          { label: 'Vouchers', icon: "tago" },
-          { label: 'Saved Items', icon: "hearto" },
-          { label: 'Follow Seller', icon: "addusergroup" },
-          { label: 'Recently Viewed', icon: "find" },
-          { label: 'Recently Searched', icon: "search1" },
+          { label: 'Orders', icon: "isv", url: '/profile/orders/' },
+          { label: 'Inbox', icon: "inbox", url: '/profile/follow/' },
+          { label: 'Rating & Reviews', icon: "like2", url: '/profile/inbox/' },
+          { label: 'Vouchers', icon: "tago", url: '/profile/rating/' },
+          { label: 'Saved Items', icon: "hearto", url: '/profile/saved/' },
+          { label: 'Follow Seller', icon: "addusergroup", url: '/profile/vouchers/' },
         ].map((item, index) => (
-          <Pressable key={index} style={styles.accountItem}>
+          <Pressable key={index} style={styles.accountItem} onPress={() => { router.replace(item.url) }}>
             <AntDesign name={item.icon} size={24} style={styles.accountIcon} />
             <Text style={styles.accountText}>{item.label}</Text>
             <AntDesign name="doubleright" size={15} style={styles.arrowIcon} />
@@ -68,10 +66,9 @@ export default function ProfileScreen() {
       <Text style={styles.sectionTitle}>SETTINGS</Text>
       <View style={styles.settingsSection}>
         {[
-          { label: 'Address Book', icon: "contacts" },
-          { label: 'Close Account', icon: "warning" },
+          { label: 'Address Book', icon: "contacts", url: '/profile/address/' },
         ].map((item, index) => (
-          <Pressable key={index} style={styles.accountItem}>
+          <Pressable key={index} style={styles.accountItem} onPress={() => { router.replace(item.url) }}>
             <AntDesign name={item.icon} size={24} style={styles.accountIcon} />
             <Text style={styles.accountText}>{item.label}</Text>
             <AntDesign name="doubleright" size={15} style={styles.arrowIcon} />

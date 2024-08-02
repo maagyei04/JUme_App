@@ -66,7 +66,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="Categories"
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="appstore-o" color={color} />,
         }}
       />
       <Tabs.Screen

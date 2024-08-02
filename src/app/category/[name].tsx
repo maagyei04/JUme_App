@@ -96,7 +96,7 @@ const CategoryDetailsScreen = () => {
                 }
             >
                 <Stack.Screen options={{
-                    title: `Category: ${name}`,
+                    title: `${name}`,
                     headerRight: () => (
                         <Link href="/cart" asChild>
                             <Pressable style={styles.cartIcon}>

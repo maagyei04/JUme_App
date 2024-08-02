@@ -1,8 +1,37 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, Pressable, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, ScrollView, ImageSourcePropType } from 'react-native';
+
+
+type BannerProps = {
+  index: number;
+  banners: { image: ImageSourcePropType }[];
+}
 
 const FeedScreen = () => {
-  const [selectedTab, setSelectedTab] = useState('Following');
+  const [selectedTab, setSelectedTab] = useState('Explore Ads');
+
+  const banners = [
+    { image: require('@assets/images/banner1.jpeg') },
+    { image: require('@assets/images/banner2.jpeg') },
+    { image: require('@assets/images/banner3.jpeg') },
+    { image: require('@assets/images/banner4.jpeg') },
+    { image: require('@assets/images/banner5.jpeg') },
+  ];
+
+  const Banner = ({ index, banners }: BannerProps) => (
+    <LinearGradient
+      colors={['#A146E2', '#770063']}
+      style={styles.banner}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+    >
+      <View style={{ height: 150, width: 350 }}>
+        <Image source={banners[index].image} style={{ width: '100%', height: '100%' }} />
+      </View>
+    </LinearGradient>
+  );
+
 
   const feedItems = [
     {
@@ -37,7 +66,9 @@ const FeedScreen = () => {
 
       {selectedTab === 'Explore Ads' && (
         <View style={styles.exploreContainer}>
-          <Text style={styles.exploreText}>Explore content goes here.</Text>
+          {banners.map((_, index) => (
+            <Banner key={index} index={index} banners={banners} />
+          ))}
         </View>
       )}
 
@@ -155,8 +186,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   exploreContainer: {
-    margin: 10,
-    padding: 20,
     backgroundColor: '#FFF',
     borderRadius: 10,
     justifyContent: 'center',
@@ -192,6 +221,15 @@ const styles = StyleSheet.create({
   activeText: {
     color: '#FF007F',
     fontWeight: 'bold',
+  },
+  banner: {
+    borderRadius: 10,
+    margin: 5,
+    shadowColor: '#fffffff',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 2,
+    shadowRadius: 2,
+    elevation: 12,
   },
 });
 

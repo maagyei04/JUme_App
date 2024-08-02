@@ -38,7 +38,13 @@ const AddressForm = () => {
             console.log('error:', error);
         } finally {
             setLoading(false);
-            router.push('/checkout/delivery');
+            const data = {
+                address: JSON.stringify(address),
+            };
+            router.push({
+                pathname: '/checkout/delivery',
+                params: data,
+            });
         }
     };
 

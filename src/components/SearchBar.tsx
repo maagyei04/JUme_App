@@ -79,6 +79,10 @@ const SearchBar: React.FC<SearchBarProps> = ({ onFocus, onBlur, onChangeText }) 
         );
     };
 
+    const handleImageSearch = async (imageUri: string) => {
+        Alert.alert('Image search currently unavailable, Google Cloud Vision undergoing maintenance...')
+    };
+
     const launchCamera = async () => {
         const result = await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -88,8 +92,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ onFocus, onBlur, onChangeText }) 
         });
 
         if (!result.canceled) {
-            // Handle the captured image
-            console.log(result.assets[0].uri);
+            const uri = result.assets[0].uri;
+            handleImageSearch(uri);
         }
     };
 
@@ -102,8 +106,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ onFocus, onBlur, onChangeText }) 
         });
 
         if (!result.canceled) {
-            // Handle the selected image
-            console.log(result.assets[0].uri);
+            const uri = result.assets[0].uri;
+            handleImageSearch(uri);
         }
     };
 

@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, useGlobalSearchParams } from 'expo-router';
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useCart } from '@/providers/CartProvider';
@@ -7,11 +7,14 @@ import { useAuth } from '@/providers/AuthProvider';
 import { Address } from '@/types';
 
 const DeliveryScreen = () => {
-    const [address, setAddress] = useState<Address | null>(null);
     const [loading, setLoading] = useState(false);
     const [selectedMethod, setSelectedMethod] = useState('door_delivery');
     const { items, total } = useCart();
     const { profile } = useAuth();
+
+    const params = useGlobalSearchParams();
+
+    const address = JSON.parse(Array.isArray(params.address) ? params.address[0] : params.address || '{}') as Address;
 
 
     const handleSubmit = () => {
@@ -46,8 +49,8 @@ const DeliveryScreen = () => {
             </View>
             <View style={styles.orderSummary}>
                 <Text style={styles.subHeader}>ADDRESS</Text>
-                <Text style={styles.address}>{address?.first_name} Agyei</Text>
-                <Text style={styles.address}>Ayeduase, Amen Hostel Annex</Text>
+                <Text style={styles.address}>{address?.first_name} {address?.last_name}</Text>
+                <Text style={styles.address}>{address.address}</Text>
             </View>
             <View style={styles.orderSummary}>
                 <Text style={styles.subHeader}>DELIVERY METHOD</Text>
